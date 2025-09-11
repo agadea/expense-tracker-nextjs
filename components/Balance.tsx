@@ -1,6 +1,12 @@
-import getUserBalance from "@/app/actions/getUserBalance";
-import { addCommas } from "@/lib/utils";
+import getUserBalance from '@/app/actions/getUserBalance';
+import { addCommas } from '@/lib/utils';
 
+/**
+ * A server component that displays the user's current balance.
+ * It fetches the balance using the `getUserBalance` server action.
+ *
+ * @returns {Promise<JSX.Element>} A component showing the user's balance.
+ */
 const Balance = async () => {
   const { balance } = await getUserBalance();
 

@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Expense Tracker
+
+This is a full-stack expense tracker application built with Next.js, TypeScript, and Prisma. It allows users to track their income and expenses, and it uses Clerk for authentication.
+
+## Architecture
+
+The application follows a modern Next.js architecture, leveraging server components and server actions to create a fast and interactive user experience.
+
+- **Frontend:** Built with React and Next.js. The UI is composed of server components for data display and client components for user interactions.
+- **Backend:** Server actions are used to handle form submissions and data mutations. These actions call a service layer that contains the core business logic.
+- **Database:** Prisma is used as the ORM to interact with a PostgreSQL database.
+- **Authentication:** Clerk is used for user authentication and management.
+
+### Service Layer
+
+To promote a clean architecture, the business logic is separated from the Next.js-specific code. All database operations and core logic are handled in a `services` directory. The server actions are thin wrappers that call these services. This separation of concerns makes the code more modular, reusable, and easier to test.
 
 ## Getting Started
 
-First, run the development server:
+First, you need to set up your environment variables. Copy the `.env.example` file to a new file named `.env` and fill in the required values:
+
+```bash
+cp .env.example .env
+```
+
+Then, install the dependencies:
+
+```bash
+npm install
+```
+
+Next, run the database migrations:
+
+```bash
+npx prisma migrate dev
+```
+
+Finally, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Database Schema
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+The database schema is defined in `prisma/schema.prisma`. It consists of two models:
 
-## Learn More
+- **User:** Stores user information, including their Clerk ID, email, and name.
+- **Transaction:** Stores transaction details, including the text, amount, and a reference to the user who created it.
 
-To learn more about Next.js, take a look at the following resources:
+Here is a simplified view of the schema:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```prisma
+model User {
+  id           String        @id @default(uuid())
+  clerkUserId  String        @unique
+  email        String        @unique
+  name         String?
+  imageUrl     String?
+  transactions Transaction[]
+}
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+model Transaction {
+  id        String   @id @default(uuid())
+  text      String
+  amount    Float
+  userId    String
+  user      User     @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+```
