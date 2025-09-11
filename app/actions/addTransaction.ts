@@ -1,55 +1,46 @@
 'use server';
-import { auth } from "@clerk/nextjs/server";
-import { db } from "@/lib/db";
-import { revalidatePath } from "next/cache";
 
-interface TransactionData {
-  text: string;
-  amount: number;
-}
+import { addTransaction as addTransactionService } from '@/services/transactions';
+import { auth } from '@clerk/nextjs/server';
+import { revalidatePath } from 'next/cache';
 
-interface TransactionResult {
-  data?: TransactionData;
+/**
+ * Server action to add a new transaction.
+ * This action handles form data, validation, and authentication.
+ * It then calls the addTransaction service to persist the data.
+ *
+ * @param formData - The form data from the client.
+ * @returns A promise that resolves to an object with the new transaction data or an error.
+ */
+async function addTransaction(formData: FormData): Promise<{
+  data?: any;
   error?: string;
-}
-
-async function addTransaction(formData: FormData): Promise<TransactionResult> {
+}> {
   const textValue = formData.get('text');
   const amountValue = formData.get('amount');
 
-  // Check for input values
-
   if (!textValue || textValue === '' || !amountValue || amountValue === '') {
-    return { error: 'Text or amount is missing' }
+    return { error: 'Text or amount is missing' };
   }
 
-  const text: string = textValue.toString(); // Ensure text is a string
-  const amount: number = parseFloat(amountValue.toString()); // Parse amount as a number
+  const text: string = textValue.toString();
+  const amount: number = parseFloat(amountValue.toString());
 
-  //  Get logged in user
   const { userId } = auth();
 
-  //  Check for user
   if (!userId) {
-    return { error: 'User not found' }
+    return { error: 'User not found' };
   }
 
-  try {
-    const transactionData: TransactionData = await db.transaction.create({
-      data: {
-        text,
-        amount,
-        userId,
-      },
-    });
+  const { data, error } = await addTransactionService(text, amount, userId);
 
-    revalidatePath('/');
-
-    return { data: transactionData };
-  } catch (error) {
-    return { error: 'Transaction not added' };
+  if (error) {
+    return { error };
   }
 
+  revalidatePath('/');
+
+  return { data };
 }
 
 export default addTransaction;
