@@ -1,7 +1,7 @@
 'use server';
 
 import { deleteTransaction as deleteTransactionService } from '@/services/transactions';
-import { auth } from '@clerk/nextjs/server';
+import { getUser } from '@/lib/getUser';
 import { revalidatePath } from 'next/cache';
 
 /**
@@ -14,15 +14,15 @@ async function deleteTransaction(transactionId: string): Promise<{
   message?: string;
   error?: string;
 }> {
-  const { userId } = auth();
+  const user = await getUser();
 
-  if (!userId) {
+  if (!user) {
     return { error: 'User not found' };
   }
 
   const { message, error } = await deleteTransactionService(
     transactionId,
-    userId
+    user.id
   );
 
   if (error) {

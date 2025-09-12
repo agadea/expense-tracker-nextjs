@@ -1,7 +1,7 @@
 'use server';
 
 import { getTransactions as getTransactionsService } from '@/services/transactions';
-import { auth } from '@clerk/nextjs/server';
+import { getUser } from '@/lib/getUser';
 import { Transaction } from '@/types/Transaction';
 
 /**
@@ -16,13 +16,13 @@ async function getTransactions(): Promise<{
   transactions?: Transaction[];
   error?: string;
 }> {
-  const { userId } = auth();
+  const user = await getUser();
 
-  if (!userId) {
+  if (!user) {
     return { error: 'User not found' };
   }
 
-  return await getTransactionsService(userId);
+  return await getTransactionsService(user.id);
 }
 
 export default getTransactions;

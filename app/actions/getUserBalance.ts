@@ -1,7 +1,7 @@
 'use server';
 
 import { getUserBalance as getUserBalanceService } from '@/services/transactions';
-import { auth } from '@clerk/nextjs/server';
+import { getUser } from '@/lib/getUser';
 
 /**
  * Server action to get the balance for the logged-in user.
@@ -12,13 +12,13 @@ async function getUserBalance(): Promise<{
   balance?: number;
   error?: string;
 }> {
-  const { userId } = auth();
+  const user = await getUser();
 
-  if (!userId) {
+  if (!user) {
     return { error: 'User not found' };
   }
 
-  return await getUserBalanceService(userId);
+  return await getUserBalanceService(user.id);
 }
 
 export default getUserBalance;

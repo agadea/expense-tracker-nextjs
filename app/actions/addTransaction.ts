@@ -1,7 +1,7 @@
 'use server';
 
 import { addTransaction as addTransactionService } from '@/services/transactions';
-import { auth } from '@clerk/nextjs/server';
+import { getUser } from '@/lib/getUser';
 import { revalidatePath } from 'next/cache';
 
 /**
@@ -26,13 +26,13 @@ async function addTransaction(formData: FormData): Promise<{
   const text: string = textValue.toString();
   const amount: number = parseFloat(amountValue.toString());
 
-  const { userId } = auth();
+  const user = await getUser();
 
-  if (!userId) {
+  if (!user) {
     return { error: 'User not found' };
   }
 
-  const { data, error } = await addTransactionService(text, amount, userId);
+  const { data, error } = await addTransactionService(text, amount, user.id);
 
   if (error) {
     return { error };

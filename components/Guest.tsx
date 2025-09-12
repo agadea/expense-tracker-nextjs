@@ -1,4 +1,4 @@
-import { SignInButton } from '@clerk/nextjs';
+import Link from 'next/link';
 
 /**
  * A component that is displayed to users who are not logged in.
@@ -11,7 +11,7 @@ const Guest = () => {
     <div className='guest'>
       <h1>Welcome</h1>
       <p>Please sign in to manage your transactions</p>
-      <SignInButton />
+      <Link href='/login'>Sign In</Link>
     </div>
   );
 };

@@ -1,12 +1,12 @@
-import { currentUser } from "@clerk/nextjs/server";
-import Guest from "@/components/Guest";
-import AddTransaction from "@/components/AddTransactions";
-import Balance from "@/components/Balance";
-import IncomeExpense from "@/components/IncomeExpense";
-import TransactionList from "@/components/TransactionList";
+import { getUser } from '@/lib/getUser';
+import Guest from '@/components/Guest';
+import AddTransaction from '@/components/AddTransactions';
+import Balance from '@/components/Balance';
+import IncomeExpense from '@/components/IncomeExpense';
+import TransactionList from '@/components/TransactionList';
 
 const HomePage = async () => {
-  const user = await currentUser();
+  const user = await getUser();
 
   if (!user) {
     return <Guest />;
@@ -14,7 +14,7 @@ const HomePage = async () => {
 
   return (
     <main>
-      <h2>Welcome, {user.firstName}</h2>
+      <h2>Welcome, {user.name}</h2>
       <Balance />
       <IncomeExpense />
       <AddTransaction />
