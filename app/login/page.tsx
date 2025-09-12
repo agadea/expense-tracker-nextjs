@@ -1,58 +1,49 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
-import './auth.css';
+import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+
+import "../auth.css";
+import loginAction from "../actions/loginAction";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const clientAction = async (formData: FormData) => {
+    const { error } = await loginAction(formData);
 
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (response.ok) {
-      router.push('/');
-      toast.success('Login successful');
+    if (error) {
+      toast.error(error);
     } else {
-      const data = await response.json();
-      toast.error(data.error || 'Something went wrong');
+      toast.success("Login successful");
+      formRef.current?.reset();
     }
   };
 
   return (
-    <div className='auth-form'>
+    <div className="auth-form">
       <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor='email'>Email</label>
+      <form ref={formRef} action={clientAction}>
+        <div className="form-control">
+          <label htmlFor="email">Email</label>
           <input
-            type='email'
-            id='email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Enter your email"
           />
         </div>
-        <div>
-          <label htmlFor='password'>Password</label>
+        <div className="form-control">
+          <label htmlFor="password">Password</label>
           <input
-            type='password'
-            id='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Enter your password"
           />
         </div>
-        <button type='submit'>Login</button>
+        <button className="btn">Login</button>
       </form>
     </div>
   );

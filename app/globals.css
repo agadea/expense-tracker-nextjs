@@ -29,6 +29,7 @@ body {
 
 .navbar a {
   color: #fff;
+  text-decoration: none;
 }
 
 .navbar button,

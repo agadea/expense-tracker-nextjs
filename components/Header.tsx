@@ -1,5 +1,5 @@
-import { cookies } from 'next/headers';
-import Link from 'next/link';
+import { cookies } from "next/headers";
+import Link from "next/link";
 
 const LogoutButton = () => {
   return (
@@ -9,22 +9,38 @@ const LogoutButton = () => {
   );
 };
 
+const LoginNavButton = () => {
+  return (
+    <button type="button">
+      <Link href="/login">Login</Link>
+    </button>
+  );
+};
+
+const RegisterNavButton = () => {
+  return (
+    <button type="button">
+      <Link href="/register">Register</Link>
+    </button>
+  );
+};
+
 const Header = () => {
   const cookieStore = cookies();
-  const token = cookieStore.get('token');
+  const token = cookieStore.get("token");
 
   return (
-    <nav className='navbar'>
-      <div className='navbar-container'>
+    <nav className="navbar">
+      <div className="navbar-container">
         <h2>Expense Tracker</h2>
-        <div>
+        <div className="">
           {token ? (
             <LogoutButton />
           ) : (
-            <>
-              <Link href='/login'>Login</Link>
-              <Link href='/register'>Register</Link>
-            </>
+            <div className="s">
+              <LoginNavButton />
+              <RegisterNavButton />
+            </div>
           )}
         </div>
       </div>
