@@ -1,7 +1,7 @@
 'use server';
 
 import { getIncomeExpense as getIncomeExpenseService } from '@/services/transactions';
-import { auth } from '@clerk/nextjs/server';
+import { getUser } from '@/lib/getUser';
 
 /**
  * Server action to get the total income and expense for the logged-in user.
@@ -13,13 +13,13 @@ async function getIncomeExpense(): Promise<{
   expense?: number;
   error?: string;
 }> {
-  const { userId } = auth();
+  const user = await getUser();
 
-  if (!userId) {
+  if (!user) {
     return { error: 'User not found' };
   }
 
-  return await getIncomeExpenseService(userId);
+  return await getIncomeExpenseService(user.id);
 }
 
 export default getIncomeExpense;

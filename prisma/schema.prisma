@@ -15,10 +15,10 @@ datasource db {
 
 model User {
   id String @id @default(uuid())
-  clerkUserId String @unique
   email String @unique
   name String?
   imageUrl String?
+  password String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   transactions Transaction[]
@@ -30,7 +30,7 @@ model Transaction {
   amount Float
   // Relation to user
   userId String
-  user User @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   @@index([userId])
 }
