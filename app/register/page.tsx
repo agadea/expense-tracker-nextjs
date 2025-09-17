@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { Button } from "@/components/ui/button";
 import "../auth.css";
 
 const RegisterPage = () => {
@@ -62,7 +63,7 @@ const RegisterPage = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Register</button>
+        <Button type="submit">Register</Button>
       </form>
     </div>
   );

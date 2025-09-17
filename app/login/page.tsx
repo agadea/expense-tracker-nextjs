@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 import "../auth.css";
 import { loginAction } from "../actions/loginAction";
+import { Button } from "@/components/ui/button";
 
 const LoginPage = () => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -42,7 +43,9 @@ const LoginPage = () => {
             placeholder="Enter your password"
           />
         </div>
-        <button className="btn">Login</button>
+        <Button type="submit" className="btn">
+          Login
+        </Button>
       </form>
     </div>
   );
