@@ -1,9 +1,10 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { logoutAction } from "@/app/actions/logoutAction";
 
 const LogoutButton = () => {
   return (
-    <form action="/api/auth/logout" method="post">
+    <form action={logoutAction} method="post">
       <button type="submit">Logout</button>
     </form>
   );

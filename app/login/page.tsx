@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { toast } from "react-toastify";
 
 import "../auth.css";
-import loginAction from "../actions/loginAction";
+import { loginAction } from "../actions/loginAction";
 
 const LoginPage = () => {
   const formRef = useRef<HTMLFormElement>(null);

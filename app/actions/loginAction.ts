@@ -13,7 +13,7 @@ import { SignJWT } from 'jose';
  * @param formData - FormData object containing 'email' and 'password' fields.
  * @returns A promise that resolves and redirects on success, or returns an error message on failure.
  */
-async function loginAction(formData: FormData): Promise<{
+export async function loginAction(formData: FormData): Promise<{
   error?: string;
 }> {
 
@@ -61,5 +61,3 @@ async function loginAction(formData: FormData): Promise<{
 
   redirect('/');
 }
-
-export default loginAction;
