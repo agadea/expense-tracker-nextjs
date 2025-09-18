@@ -3,6 +3,7 @@
 import addTransaction from '@/app/actions/addTransaction';
 import { toast } from 'react-toastify';
 import { useRef } from 'react';
+import { Button } from './ui/button';
 
 /**
  * A client component for adding a new transaction.
@@ -53,7 +54,7 @@ const AddTransaction = () => {
             step='0.01'
           />
         </div>
-        <button className='btn'>Add Transaction</button>
+        <Button className='btn'>Add Transaction</Button>
       </form>
     </>
   );

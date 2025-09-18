@@ -3,6 +3,7 @@ import { Transaction } from '@/types/Transaction';
 import { addCommas } from '@/lib/utils';
 import { toast } from 'react-toastify';
 import deleteTransaction from '@/app/actions/deleteTransaction';
+import { Button } from './ui/button';
 
 /**
  * A client component that displays a single transaction item.
@@ -41,12 +42,13 @@ const TransactionItem = ({ transaction }: { transaction: Transaction }) => {
       <span>
         {sign}${addCommas(Math.abs(transaction.amount))}
       </span>
-      <button
+      <Button
         onClick={() => handleDeleteTransaction(transaction.id)}
         className='delete-btn'
+        variant='destructive'
       >
         X
-      </button>
+      </Button>
     </li>
   );
 };

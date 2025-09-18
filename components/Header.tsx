@@ -1,28 +1,29 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { logoutAction } from "@/app/actions/logoutAction";
+import { Button } from "./ui/button";
 
 const LogoutButton = () => {
   return (
     <form action={logoutAction} method="post">
-      <button type="submit">Logout</button>
+      <Button type="submit">Logout</Button>
     </form>
   );
 };
 
 const LoginNavButton = () => {
   return (
-    <button type="button">
+    <Button asChild>
       <Link href="/login">Login</Link>
-    </button>
+    </Button>
   );
 };
 
 const RegisterNavButton = () => {
   return (
-    <button type="button">
+    <Button asChild>
       <Link href="/register">Register</Link>
-    </button>
+    </Button>
   );
 };
 
