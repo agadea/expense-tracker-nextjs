@@ -55,7 +55,7 @@ export async function loginAction(formData: FormData): Promise<{
   cookies().set('token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 30, // 30 minutes
+    maxAge: 60 * 30,
     path: '/'
   });
 

@@ -2,8 +2,6 @@
 
 import { useRef } from "react";
 import { toast } from "react-toastify";
-
-import "../auth.css";
 import { loginAction } from "../actions/loginAction";
 import { Button } from "@/components/ui/button";
 
