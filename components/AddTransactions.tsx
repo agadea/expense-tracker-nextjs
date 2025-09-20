@@ -1,62 +1,104 @@
 'use client';
 
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import addTransaction from '@/app/actions/addTransaction';
-import { toast } from 'react-toastify';
-import { useRef } from 'react';
-import { Button } from './ui/button';
+import { toast } from 'sonner';
+import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
-/**
- * A client component for adding a new transaction.
- * It provides a form for the user to enter the transaction details.
- * When the form is submitted, it calls the `addTransaction` server action.
- *
- * @returns {JSX.Element} The form for adding a new transaction.
- */
+const formSchema = z.object({
+  text: z.string().min(1, {
+    message: 'Please enter a description.',
+  }),
+  amount: z.string().refine((val) => !isNaN(parseFloat(val)), {
+    message: 'Please enter a valid amount.',
+  }),
+});
+
 const AddTransaction = () => {
-  const formRef = useRef<HTMLFormElement>(null);
+  const [loading, setLoading] = useState(false);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      text: '',
+      amount: '',
+    },
+  });
 
-  /**
-   * An async function that is called when the form is submitted.
-   * It calls the `addTransaction` server action and handles the response.
-   * If the action is successful, it shows a success toast and resets the form.
-   * If there is an error, it shows an error toast.
-   *
-   * @param {FormData} formData - The data from the form.
-   */
-  const clientAction = async (formData: FormData) => {
-    const { data, error } = await addTransaction(formData);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append('text', values.text);
+    formData.append('amount', values.amount);
+
+    const { error } = await addTransaction(formData);
 
     if (error) {
       toast.error(error);
     } else {
       toast.success('Transaction added');
-      formRef.current?.reset();
+      form.reset();
     }
+    setLoading(false);
   };
 
   return (
-    <>
-      <h3>Add transaction</h3>
-      <form ref={formRef} action={clientAction}>
-        <div className='form-control'>
-          <label htmlFor='text'>Text</label>
-          <input type='text' name='text' id='text' placeholder='text...' />
-        </div>
-        <div className='form-control'>
-          <label htmlFor='amount'>
-            Amount <br /> (negative - expense, positive - income)
-          </label>
-          <input
-            type='number'
-            name='amount'
-            id='amount'
-            placeholder='enter amount...'
-            step='0.01'
+    <div className="mb-8">
+      <h3 className="text-lg font-medium">Add transaction</h3>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="text"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. Coffee" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <Button className='btn'>Add Transaction</Button>
-      </form>
-    </>
+          <FormField
+            control={form.control}
+            name="amount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Amount (negative - expense, positive - income)
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    placeholder="e.g. -2.50"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" disabled={loading}>
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Add Transaction
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 };
 

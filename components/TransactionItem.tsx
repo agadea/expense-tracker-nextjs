@@ -1,9 +1,22 @@
 'use client';
 import { Transaction } from '@/types/Transaction';
 import { addCommas } from '@/lib/utils';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import deleteTransaction from '@/app/actions/deleteTransaction';
 import { Button } from './ui/button';
+import { Trash } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { motion } from 'framer-motion';
 
 /**
  * A client component that displays a single transaction item.
@@ -18,38 +31,67 @@ const TransactionItem = ({ transaction }: { transaction: Transaction }) => {
 
   /**
    * Handles the deletion of a transaction.
-   * It prompts the user for confirmation before proceeding.
-   * Calls the `deleteTransaction` server action and shows a toast message.
+   * It calls the `deleteTransaction` server action and shows a toast message.
    *
    * @param {string} transactionId - The ID of the transaction to be deleted.
    */
   const handleDeleteTransaction = async (transactionId: string) => {
-    const confirmed = window.confirm(
-      'Are you sure you want to delete this transaction?'
-    );
-
-    if (!confirmed) return;
-
     const { message, error } = await deleteTransaction(transactionId);
 
     if (error) return toast.error(error);
 
     toast.success(message);
   };
+
   return (
-    <li className={transaction.amount < 0 ? 'minus' : 'plus'}>
-      {transaction.text}
-      <span>
-        {sign}${addCommas(Math.abs(transaction.amount))}
-      </span>
-      <Button
-        onClick={() => handleDeleteTransaction(transaction.id)}
-        className='delete-btn'
-        variant='destructive'
-      >
-        X
-      </Button>
-    </li>
+    <motion.li
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 20 }}
+      transition={{ duration: 0.3 }}
+      className={`flex items-center justify-between p-2 rounded-md ${
+        transaction.amount < 0 ? 'bg-rose-500/10' : 'bg-emerald-500/10'
+      }`}
+    >
+      <div className="flex items-center gap-4">
+        <div>
+          <p className="font-medium">{transaction.text}</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-4">
+        <p
+          className={`font-semibold ${
+            transaction.amount < 0 ? 'text-rose-500' : 'text-emerald-500'
+          }`}
+        >
+          {sign}${addCommas(Math.abs(transaction.amount))}
+        </p>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Trash className="h-4 w-4" />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete your
+                transaction.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => handleDeleteTransaction(transaction.id)}
+              >
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+    </motion.li>
   );
 };
 

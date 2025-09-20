@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Button } from './ui/button';
+import { LogIn } from 'lucide-react';
 
 /**
  * A component that is displayed to users who are not logged in.
@@ -9,11 +10,16 @@ import { Button } from './ui/button';
  */
 const Guest = () => {
   return (
-    <div className='guest'>
-      <h1>Welcome</h1>
-      <p>Please sign in to manage your transactions</p>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1 className="text-4xl font-bold mb-4">Welcome</h1>
+      <p className="text-lg text-muted-foreground mb-8">
+        Please sign in to manage your transactions
+      </p>
       <Button asChild>
-        <Link href='/login'>Sign In</Link>
+        <Link href="/login">
+          <LogIn className="mr-2 h-4 w-4" />
+          Sign In
+        </Link>
       </Button>
     </div>
   );
