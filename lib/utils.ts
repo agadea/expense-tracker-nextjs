@@ -1,10 +1,12 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
 
-export function addCommas(x: number | string): string {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+export function addCommas(value: number | string) {
+  const num = typeof value === 'string' ? parseFloat(value) : value
+  if (Number.isNaN(num)) return String(value)
+  return num.toLocaleString(undefined, { maximumFractionDigits: 2 })
 }

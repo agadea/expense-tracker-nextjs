@@ -4,6 +4,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/sonner";
 
+import './globals.css';
+
 const roboto = Roboto({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,10 +19,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="es" className={roboto.className}>
       <body className={roboto.className}>
         <Header />
-        <main className="container">{children}</main>
+        {children}
         <Toaster />
       </body>
     </html>

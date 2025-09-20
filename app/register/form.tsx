@@ -46,7 +46,7 @@ export function RegisterForm() {
 
   return (
     <Form {...form}>
-      <form action={formAction} className='space-y-8'>
+      <form action={formAction} >
         <FormField
           control={form.control}
           name='name'
@@ -92,7 +92,7 @@ export function RegisterForm() {
             </FormItem>
           )}
         />
-        <Button type='submit' disabled={pending}>
+        <Button disabled={pending}>
           Register
         </Button>
       </form>
