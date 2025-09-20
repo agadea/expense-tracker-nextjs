@@ -32,14 +32,14 @@ const Header = () => {
   const token = cookieStore.get("token");
 
   return (
-    <nav className="navbar">
-      <div className="navbar-container">
+    <nav >
+      <div>
         <h2>Expense Tracker</h2>
-        <div className="">
+        <div >
           {token ? (
             <LogoutButton />
           ) : (
-            <div className="s">
+            <div >
               <LoginNavButton />
               <RegisterNavButton />
             </div>
